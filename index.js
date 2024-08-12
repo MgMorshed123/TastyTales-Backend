@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import connectToDb from "./Db/Db.js";
 import dotenv from "dotenv";
+import FoodRouter from "./Routes/Foodroutes.js";
 
 const app = express();
 const port = 4000;
@@ -11,12 +12,10 @@ app.use(express.json());
 app.use(cors());
 
 //  DATABASE
-
 connectToDb();
-// Basic route
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+
+//  route
+app.use("/api/food", FoodRouter);
 
 // Start the server
 app.listen(port, () => {
