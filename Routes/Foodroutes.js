@@ -5,17 +5,17 @@ import multer from "multer";
 
 const FoodRouter = express.Router();
 
-FoodRouter.post("/add", addFood);
-
 // IMAGE STORAGE ENGINE
 
 const storage = multer.diskStorage({
   destination: "uploads",
-  filename: (req, res, cb) => {
+  filename: (req, file, cb) => {
     return cb(null, `${Date.now()} ${file.originalname}`);
   },
 });
 
 const upload = multer({ storage: storage });
+
+FoodRouter.post("/add", upload.single("image"), addFood);
 
 export default FoodRouter;

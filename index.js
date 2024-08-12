@@ -16,6 +16,7 @@ connectToDb();
 
 //  route
 app.use("/api/food", FoodRouter);
+app.use("/images", express.static("uploads"));
 
 // Start the server
 app.listen(port, () => {
