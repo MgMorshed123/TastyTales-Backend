@@ -29,7 +29,12 @@ const login = async (req, res) => {
       success: true,
       token,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.json({
+      success: true,
+      message: error,
+    });
+  }
 };
 
 const createToken = (id) => {
