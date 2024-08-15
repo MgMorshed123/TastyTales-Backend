@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
 
     password: { type: String, required: true },
 
-    cartData: { type: String, required: true },
+    // cartData: { type: String, required: true },
   },
   { minimize: false }
 );

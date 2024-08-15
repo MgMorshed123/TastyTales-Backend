@@ -6,13 +6,18 @@ import FoodRouter from "./Routes/Foodroutes.js";
 import { listFood, removeFood } from "./Controllers/FoodController.js";
 import userRouter from "./Routes/AuthRoutes.js";
 import "dotenv/config.js";
+import cartRouter from "./Routes/CartRoutes.js";
 
 const app = express();
 const port = 4000;
 dotenv.config();
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 //  DATABASE
 connectToDb();
@@ -23,6 +28,7 @@ app.use("/images", express.static("uploads"));
 
 // route auth
 app.use("/api/auth", userRouter);
+app.use("/api/cart", cartRouter);
 
 // Start the server
 app.listen(port, () => {
