@@ -12,15 +12,17 @@ const login = async (req, res) => {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return res.json({ success: false, message: "User dont exist" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User doesn't exist" });
     }
 
-    const ismATCH = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!ismATCH) {
-      return res.json({
+    if (!isMatch) {
+      return res.status(400).json({
         success: false,
-        message: "password did not matched",
+        message: "Password did not match",
       });
     }
 
@@ -28,11 +30,12 @@ const login = async (req, res) => {
     res.json({
       success: true,
       token,
+      userId: user._id,
     });
   } catch (error) {
-    res.json({
-      success: true,
-      message: error,
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };

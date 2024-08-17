@@ -2,10 +2,14 @@ import userModel from "../Models/UserModel.js";
 
 const addToCart = async (req, res) => {
   try {
+    // const { userId, itemId } = req.body;
+    // console.log("mm", req.body);
     // Fetch user data from the database
-    let userData = await userModel.findOne({ _id: req.body.userId });
+    let userData = await userModel.findById({ _id: req.user.id });
 
+    // console.log("addToCart", userData);
     // Check if userData exists
+    console.log("userDat", userData);
     if (!userData) {
       return res.json({ success: false, message: "User not found" });
     }
@@ -23,8 +27,8 @@ const addToCart = async (req, res) => {
     // Convert cartData from Map to a regular JavaScript object for manipulation
     const cartData = userData.cartData;
 
-    console.log("cartdata", cartData);
-    console.log("reqid", cartData.get(req.body.itemId));
+    // console.log("cartdata", cartData);
+    // console.log("reqid", cartData.get(req.body.itemId));
 
     // Update the quantity for the item in the cart
     if (!cartData.get(req.body.itemId)) {
@@ -48,6 +52,7 @@ const addToCart = async (req, res) => {
 const removeFromCart = async (req, res) => {
   try {
     // Fetch user data from the database
+
     let userData = await userModel.findById(req.body.userId);
 
     // Check if userData exists
@@ -86,12 +91,29 @@ const removeFromCart = async (req, res) => {
 
 const getFromCart = async (req, res) => {
   try {
-    let userData = await userModel.findById(req.body.userId);
+    const userId = req.user.id;
+    console.log("getFromCart", userId);
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
+    }
 
-    const cartData = await userData.cartData;
+    const userData = await userModel.findById(userId);
+    console.log("userData", userData);
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
 
-    res.json({ success: true, message: "Removed from cart" });
-  } catch (error) {}
+    const cartData = userData.cartData || {}; // Ensure cartData is defined
+    console.log("cartdata", cartData);
+    res.json({ success: true, data: cartData });
+  } catch (error) {
+    console.error("Error fetching cart data:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 };
 
 export { addToCart, getFromCart, removeFromCart };

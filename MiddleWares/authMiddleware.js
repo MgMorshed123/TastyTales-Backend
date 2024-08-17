@@ -1,28 +1,18 @@
 import jwt from "jsonwebtoken";
 
-const authMiddleware = async (req, res, next) => {
-  // Extract the token from the headers (assuming it's in the 'Authorization' header)
-  const { token } = req.headers;
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Get the token after "Bearer"
+  // console.log("first", token);
 
-  console.log(token);
+  if (!token) return res.sendStatus(401); // If no token is found
 
-  if (!token) {
-    return res.json({ success: false, message: "Not authorized" });
-  }
-
-  try {
-    // Verify the token
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Attach the user ID to the request object
-    req.body.userId = decodedToken.id;
-
-    // Move to the next middleware or route handler
+  jwt.verify(token, process.env.jwt_secret, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    console.log(req.user);
     next();
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Invalid or expired token" });
-  }
+  });
 };
 
 export default authMiddleware;
