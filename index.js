@@ -7,6 +7,7 @@ import { listFood, removeFood } from "./Controllers/FoodController.js";
 import userRouter from "./Routes/AuthRoutes.js";
 import "dotenv/config.js";
 import cartRouter from "./Routes/CartRoutes.js";
+import orderRouter from "./Routes/OrderRoutes.js";
 
 const app = express();
 const port = 4000;
@@ -29,6 +30,7 @@ app.use("/images", express.static("uploads"));
 // route auth
 app.use("/api/auth", userRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 
 // Start the server
 app.listen(port, () => {
