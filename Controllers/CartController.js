@@ -91,8 +91,8 @@ const removeFromCart = async (req, res) => {
 
 const getFromCart = async (req, res) => {
   try {
-    const userId = req.user.id;
-    console.log("getFromCart", userId);
+    const userId = req.userId;
+    console.log("getFromCartitems ", userId);
     if (!userId) {
       return res
         .status(400)

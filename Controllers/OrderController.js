@@ -44,7 +44,7 @@ const placeOrder = async (req, res) => {
           name: "Delivery Charges",
         },
 
-        unit_amount: Math.round(2 * 100 * 80),
+        unit_amount: Math.round(40 * 100),
       },
       quantity: 1,
     });
@@ -87,12 +87,38 @@ const verifyOrder = async (req, res) => {
 // user order
 
 const userOrders = async (req, res) => {
+  console.log("req.userId ", req.userId);
   try {
-    const orders = await orderModel.find({ userId: req.body.userId });
+    const orders = await orderModel.find({ userId: req.userId });
+    res.json({ success: true, data: orders });
   } catch (error) {
     console.log(error);
     res.json({ success: false, data: orders });
   }
 };
 
-export { placeOrder, verifyOrder, userOrders };
+const listOrders = async (req, res) => {
+  try {
+    const orders = await orderModel.find({});
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error" });
+  }
+};
+
+const updateStatus = async (req, res) => {
+  try {
+    await orderModel.findByIdAndUpdate(req.body.orderId, {
+      status: req.body.status,
+    });
+
+    res.json({ success: true, message: "Status updated" });
+  } catch (error) {
+    console.log(error);
+
+    res.json({ success: false, message: "Error" });
+  }
+};
+
+export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus };
